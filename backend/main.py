@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import auth, predictions
+from app.api import auth, predictions, players  # Aggiungi 'players' qui
 
 app = FastAPI(title="Fantacalcio AI API", description="API for Fantacalcio AI application")
 
@@ -20,9 +20,9 @@ async def root():
 # Include routers
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 app.include_router(predictions.router, prefix="/api", tags=["Predictions"])
+app.include_router(players.router, prefix="/api", tags=["Players"])  # Aggiungi questa linea
 
 # Other routers (commented out for now)
-# app.include_router(players_router, prefix="/players", tags=["Players"])
 # app.include_router(squad_router, prefix="/squad", tags=["Squad"])
 # app.include_router(formation_router, prefix="/formation", tags=["Formation"])
 # app.include_router(trade_router, prefix="/trade-suggestions", tags=["Trades"])

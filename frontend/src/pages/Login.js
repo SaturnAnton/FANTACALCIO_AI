@@ -46,7 +46,13 @@ const Login = () => {
           
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-              <span className="block sm:inline">{error}</span>
+              <span className="block sm:inline">
+                {typeof error === 'string'
+                  ? error
+                  : Array.isArray(error)
+                  ? error.map((e, i) => <div key={i}>{e.msg}</div>)
+                  : error.msg}
+              </span>
             </div>
           )}
           
@@ -115,7 +121,7 @@ const Login = () => {
           <div className="mt-8 p-4 bg-gray-100 rounded-md">
             <h3 className="text-sm font-semibold text-gray-700 mb-2">Demo Credentials</h3>
             <p className="text-xs text-gray-600 mb-1">Email: demo@fantacalcio.ai</p>
-            <p className="text-xs text-gray-600">Password: demo123</p>
+            <p className="text-xs text-gray-600">Password: password</p>
           </div>
         </div>
       </div>

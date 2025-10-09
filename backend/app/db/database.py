@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Database connection URL - update with your PostgreSQL credentials
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:password@localhost/fantacalcio_ai"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:Antongiulio@localhost/fantacalcio"
 
 # Create SQLAlchemy engine
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
