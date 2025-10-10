@@ -1,159 +1,87 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  
-  const { register } = useAuth();
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
-  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate form
-    if (!name || !email || !password || !confirmPassword) {
-      setError('Please fill in all fields');
+    // 🔥 VALIDAZIONE PASSWORD NEL FRONTEND
+    if (password.length > 50) {
+      alert("La password non può superare i 50 caratteri");
       return;
     }
     
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
+    if (password.length < 8) {
+      alert("La password deve essere di almeno 8 caratteri");
       return;
     }
-    
+
+    setIsLoading(true);
+
     try {
-      setError('');
-      setLoading(true);
+      const response = await fetch("http://localhost:8000/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      // 🔥 CONTROLLO CRITICO: verifica se la risposta è ok PRIMA di fare .json()
+      if (!response.ok) {
+        let errorMessage = "Errore durante la registrazione";
+        
+        // Prova a leggere il messaggio di errore dal server
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.detail || errorData.message || errorMessage;
+        } catch (jsonError) {
+          // Se non riesce a parsare come JSON, usa lo status HTTP
+          errorMessage = `Errore ${response.status}: ${response.statusText}`;
+        }
+        
+        throw new Error(errorMessage);
+      }
+
+      // Solo se response.ok è true, procedi con il parsing JSON
+      const data = await response.json();
+      login(data);
+      navigate("/");
       
-      // Call register function from auth context
-      await register(name, email, password);
-      
-      // Redirect to dashboard on success
-      navigate('/');
-    } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to create an account');
+    } catch (error) {
+      console.error("Errore fetch:", error);
+      alert(error.message || "Errore di connessione al server");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
-  
-  return (
-    <div className="flex justify-center items-center min-h-[calc(100vh-4rem)]">
-      <div className="w-full max-w-md">
-        <div className="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-            Create your Fantacalcio AI account
-          </h2>
-          
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-              {typeof error === 'string'
-                ? error
-                : Array.isArray(error)
-                ? error.map((e, i) => <div key={i}>{e.msg || JSON.stringify(e)}</div>)
-                : error.msg || JSON.stringify(error)}
-            </div>
-          )}
 
-          
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-                Name
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="name"
-                type="text"
-                placeholder="Your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
-            
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                Email
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="email"
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                Password
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="password"
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            
-            <div className="mb-6">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="confirmPassword">
-                Confirm Password
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="confirmPassword"
-                type="password"
-                placeholder="Confirm password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <button
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
-                type="submit"
-                disabled={loading}
-              >
-                {loading ? (
-                  <span className="flex justify-center items-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Creating account...
-                  </span>
-                ) : (
-                  'Register'
-                )}
-              </button>
-            </div>
-          </form>
-          
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">
-              Already have an account?{' '}
-              <Link to="/login" className="text-blue-600 hover:text-blue-800">
-                Log in
-              </Link>
-            </p>
-          </div>
-        </div>
-      </div>
+  return (
+    <div>
+      <h2>Registrazione</h2>
+      <form onSubmit={handleSubmit}>
+        <input 
+          placeholder="Email" 
+          value={email} 
+          onChange={e => setEmail(e.target.value)}
+          disabled={isLoading}
+        />
+        <input 
+          type="password" 
+          placeholder="Password (minimo 8 caratteri)" 
+          value={password} 
+          onChange={e => setPassword(e.target.value)}
+          disabled={isLoading}
+        />
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? "Registrazione in corso..." : "Registrati"}
+        </button>
+      </form>
     </div>
   );
 };

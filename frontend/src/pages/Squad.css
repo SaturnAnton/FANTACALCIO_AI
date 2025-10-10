@@ -1,223 +1,53 @@
-/* Squad.css - Nuove regole per l'Invio */
-
-.search-instructions {
-  background: #e3f2fd;
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-left: 4px solid #2196f3;
-}
-
-.instruction-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-  color: #1976d2;
-}
-
-.instruction-item:last-child {
-  margin-bottom: 0;
-}
-
-.instruction-icon {
-  font-size: 1.2em;
-  margin-right: 10px;
-  min-width: 30px;
-}
-
-.input-with-button {
-  display: flex;
-  gap: 10px;
-  align-items: stretch;
-}
-
-.search-input {
-  flex: 1;
-  padding: 15px 20px;
-  border: 2px solid #e1e5e9;
-  border-radius: 10px;
-  font-size: 16px;
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-.search-input:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.enter-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 15px 20px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 120px;
-  font-size: 14px;
-}
-
-.enter-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-}
-
-.enter-button:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.quick-actions {
-  background: #fff3cd;
-  border: 1px solid #ffeaa7;
-  border-radius: 8px;
-  padding: 12px;
-  margin-top: 15px;
-  text-align: center;
-}
-
-.action-item {
-  color: #856404;
-}
-
-kbd {
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 4px;
-  padding: 2px 6px;
-  font-size: 0.8em;
-  font-weight: bold;
-  color: #495057;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-/* Giocatore Selezionato - Stile migliorato */
-.selected-player-card {
-  background: white;
-  border: 2px solid #4caf50;
-  border-radius: 12px;
+.squad-container {
+  max-width: 1000px;
+  margin: 0 auto;
   padding: 20px;
-  margin-top: 15px;
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+  font-family: sans-serif;
 }
 
-.player-main-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 15px;
+.player-search-section input {
+  width: 60%;
+  padding: 8px;
+  margin-right: 10px;
 }
 
-.player-header-selected h5 {
-  margin: 0 0 5px 0;
-  font-size: 1.3em;
-  color: #2c3e50;
-}
-
-.player-team-role {
-  color: #6c757d;
-  font-size: 0.9em;
-}
-
-.player-price-tag {
-  background: #4caf50;
-  color: white;
+.player-search-section button {
   padding: 8px 12px;
-  border-radius: 20px;
-  font-weight: bold;
-  font-size: 1.1em;
+  cursor: pointer;
 }
 
-.stat-item-preview {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid #f0f0f0;
+.search-results, .selected-player, .players-grid {
+  margin-top: 10px;
 }
 
-.stat-item-preview:last-child {
-  border-bottom: none;
+.player-card, .squad-player-card {
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin-bottom: 5px;
+  cursor: pointer;
 }
 
-.stat-label-preview {
-  color: #6c757d;
-  font-weight: 500;
+.player-card.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
-.stat-value-preview {
-  font-weight: bold;
-  color: #2c3e50;
-  background: #f8f9fa;
-  padding: 4px 8px;
-  border-radius: 6px;
+.squad-player-card.full-role {
+  opacity: 0.5;
+  background: #f0f0f0;
+  pointer-events: none;
 }
 
-.confirmation-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
+.role-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #ddd;
+  border-radius: 3px;
+  margin-top: 4px;
 }
 
-.confirm-add-button {
-  flex: 2;
+.role-progress-fill {
+  height: 6px;
   background: #4caf50;
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.confirm-add-button:hover {
-  background: #45a049;
-}
-
-.cancel-button {
-  flex: 1;
-  background: #f44336;
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.cancel-button:hover {
-  background: #da190b;
-}
-
-/* Loading migliorato */
-.loading-spinner {
-  text-align: center;
-  padding: 10px;
-  color: #667eea;
-  font-weight: 500;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .input-with-button {
-    flex-direction: column;
-  }
-  
-  .enter-button {
-    min-width: auto;
-  }
-  
-  .player-main-info {
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .confirmation-actions {
-    flex-direction: column;
-  }
+  border-radius: 3px;
 }

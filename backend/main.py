@@ -1,31 +1,27 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import auth, predictions, players  # Aggiungi 'players' qui
+from app.db.database import Base, engine
+from app.routers import auth, players, predictions, squads
 
-app = FastAPI(title="Fantacalcio AI API", description="API for Fantacalcio AI application")
+# Crea tabelle
+Base.metadata.create_all(bind=engine)
 
-# Configure CORS
+app = FastAPI(title="Fantacalcio API")
+
+# 🔥 CONFIGURA CORS - AGGIUNGI QUESTO
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, replace with specific origins
+    allow_origins=["http://localhost:3000"],  # URL del tuo frontend React
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # Permetti tutti i metodi (GET, POST, OPTIONS, ecc.)
+    allow_headers=["*"],  # Permetti tutti gli headers
 )
-
-@app.get("/")
-async def root():
-    return {"message": "Welcome to Fantacalcio AI API"}
 
 # Include routers
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
-app.include_router(predictions.router, prefix="/api", tags=["Predictions"])
-app.include_router(players.router, prefix="/api", tags=["Players"])  # Aggiungi questa linea
-
-# Other routers (commented out for now)
-# app.include_router(squad_router, prefix="/squad", tags=["Squad"])
-# app.include_router(formation_router, prefix="/formation", tags=["Formation"])
-# app.include_router(trade_router, prefix="/trade-suggestions", tags=["Trades"])
+app.include_router(players.router, prefix="/api/players", tags=["Players"])
+app.include_router(predictions.router, prefix="/api/predictions", tags=["Predictions"])
+app.include_router(squads.router, prefix="/api/squads", tags=["Squads"])
 
 if __name__ == "__main__":
     import uvicorn
