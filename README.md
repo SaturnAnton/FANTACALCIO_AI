@@ -6,8 +6,6 @@ A data-driven web application for Fantacalcio (Italian fantasy football) players
 
 This application helps Fantacalcio players make data-driven decisions by:
 - Predicting Serie A player performances
-- Recommending optimal formations and lineups
-- Suggesting trade opportunities
 - All based on real data from FBref and Fantacalcio.it
 
 ## 📊 Data Sources
