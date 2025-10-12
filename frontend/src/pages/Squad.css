@@ -1,53 +1,133 @@
 .squad-container {
   max-width: 1000px;
-  margin: 0 auto;
+  margin: auto;
   padding: 20px;
-  font-family: sans-serif;
+  font-family: Arial, sans-serif;
 }
 
-.player-search-section input {
-  width: 60%;
-  padding: 8px;
-  margin-right: 10px;
+.search-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-.player-search-section button {
-  padding: 8px 12px;
+.search-section input {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.search-section button {
+  padding: 10px 15px;
+  font-size: 16px;
   cursor: pointer;
+  border-radius: 6px;
+  border: none;
+  background-color: #1e90ff;
+  color: white;
+  transition: background-color 0.2s;
 }
 
-.search-results, .selected-player, .players-grid {
+.search-section button:hover {
+  background-color: #0c6cd1;
+}
+
+.notfound {
+  color: red;
+  font-weight: bold;
   margin-top: 10px;
 }
 
-.player-card, .squad-player-card {
-  border: 1px solid #ccc;
-  padding: 8px;
-  margin-bottom: 5px;
+.role-section {
+  margin-bottom: 30px;
+}
+
+.role-section h2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 20px;
+}
+
+.role-section h2::after {
+  content: attr(data-badge);
+  background: #333;
+  color: #fff;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 12px;
+  margin-left: 10px;
+}
+
+.players-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.player-card {
+  padding: 12px;
+  border-radius: 10px;
+  color: white;
+  width: 220px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.player-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.player-card.GK { background-color: #FFD700; color: black; }
+.player-card.DEF { background-color: #228B22; }
+.player-card.MID { background-color: #1E90FF; }
+.player-card.FWD { background-color: #FF4500; }
+
+.player-card h3 {
+  margin: 0 0 5px 0;
+}
+
+.player-card ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 5px 0;
+}
+
+.player-card ul li {
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.player-card a {
+  color: #fff;
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #ff4d4d;
+  border: none;
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
+  font-weight: bold;
 }
 
-.player-card.disabled {
-  opacity: 0.5;
-  pointer-events: none;
+.remove-btn:hover {
+  background: #cc0000;
 }
 
-.squad-player-card.full-role {
-  opacity: 0.5;
-  background: #f0f0f0;
-  pointer-events: none;
-}
-
-.role-progress-bar {
-  width: 100%;
-  height: 6px;
-  background: #ddd;
-  border-radius: 3px;
-  margin-top: 4px;
-}
-
-.role-progress-fill {
-  height: 6px;
-  background: #4caf50;
-  border-radius: 3px;
+@media (max-width: 768px) {
+  .players-grid {
+    justify-content: center;
+  }
 }

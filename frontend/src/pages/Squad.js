@@ -1,115 +1,140 @@
-import React, { useState, useEffect } from 'react';
-import './Squad.css';
+import React, { useState } from "react";
+import "./Squad.css";
+
+const roleLimits = { GK: 3, DEF: 8, MID: 8, FWD: 6 };
+const roleNames = { GK: "Portieri", DEF: "Difensori", MID: "Centrocampisti", FWD: "Attaccanti" };
 
 const Squad = () => {
+  const [playerInput, setPlayerInput] = useState("");
+  const [playerData, setPlayerData] = useState(null);
+  const [notFound, setNotFound] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [squad, setSquad] = useState([]);
-  const [playerInput, setPlayerInput] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [selectedPlayer, setSelectedPlayer] = useState(null);
 
-  const roleLimits = { GK: 3, DEF: 8, MID: 8, FWD: 6 };
-  const countByRole = role => squad.filter(p => p.role === role).length;
-  const canAddPlayer = player => countByRole(player.role) < roleLimits[player.role];
+  const normalize = (str) => str.toLowerCase().replace(/\s+/g, " ").trim();
 
-  const addPlayer = (player) => {
-    if (!player || !canAddPlayer(player)) return;
-    const newPlayer = { id: Date.now(), ...player };
-    setSquad([...squad, newPlayer]);
-    setPlayerInput('');
-    setSearchResults([]);
-    setSelectedPlayer(null);
-  };
+  // 🔹 Cerca giocatore nel JSON con nome preciso
+  const cercaGiocatoreEsatto = async () => {
+    const nome = normalize(playerInput.trim());
+    if (!nome) return;
 
-  const handleKeyPress = async (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      if (searchResults.length > 0) {
-        addPlayer(searchResults[0]);
-      } else if (selectedPlayer) {
-        addPlayer(selectedPlayer);
-      }
+    setLoading(true);
+    setNotFound(false);
+    setPlayerData(null);
+
+    try {
+      const response = await fetch("http://localhost:8000/api/players/");
+      const data = await response.json();
+
+      const trovato = data.players.find((p) => {
+        const playerName = normalize(p.name || "");
+        const fbrefName = normalize(p.fbref_data?.player || "");
+        // ⚡ Confronto preciso: deve essere uguale
+        return playerName === nome || fbrefName === nome;
+      });
+
+      if (trovato) setPlayerData(trovato);
+      else setNotFound(true);
+    } catch (err) {
+      console.error("Errore nel caricamento JSON:", err);
+      setNotFound(true);
+    } finally {
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    const delay = setTimeout(async () => {
-      if (playerInput.length >= 2) {
-        try {
-          const response = await fetch(`http://localhost:8000/api/players/search?name=${encodeURIComponent(playerInput)}`);
-          const data = await response.json();
-          setSearchResults(data.status === 'success' ? data.players : []);
-          setSelectedPlayer(null);
-        } catch (err) {
-          console.error(err);
-          setSearchResults([]);
-        }
-      } else {
-        setSearchResults([]);
-      }
-    }, 300);
-    return () => clearTimeout(delay);
-  }, [playerInput]);
-
-  const squadByRole = {
-    GK: squad.filter(p => p.role === 'GK'),
-    DEF: squad.filter(p => p.role === 'DEF'),
-    MID: squad.filter(p => p.role === 'MID'),
-    FWD: squad.filter(p => p.role === 'FWD')
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") cercaGiocatoreEsatto();
   };
 
-  const getRoleName = role => ({ GK: 'portieri', DEF: 'difensori', MID: 'centrocampisti', FWD: 'attaccanti' }[role] || role);
+  const addPlayer = () => {
+    if (!playerData) return;
+
+    const countInRole = squad.filter((p) => p.role === playerData.role).length;
+    if (countInRole >= roleLimits[playerData.role]) {
+      alert(`Hai già il numero massimo di ${roleNames[playerData.role]}!`);
+      return;
+    }
+
+    setSquad([...squad, playerData]);
+    setPlayerData(null);
+    setPlayerInput("");
+    setNotFound(false);
+  };
+
+  const removePlayer = (player) => {
+    setSquad(squad.filter((p) => p !== player));
+  };
+
+  const squadByRole = {
+    GK: squad.filter((p) => p.role === "GK"),
+    DEF: squad.filter((p) => p.role === "DEF"),
+    MID: squad.filter((p) => p.role === "MID"),
+    FWD: squad.filter((p) => p.role === "FWD"),
+  };
 
   return (
     <div className="squad-container">
-      <h1>🏆 La Mia Squadra Fantacalcio</h1>
+      <h1>📊 Squadra Fantacalcio</h1>
 
-      {/* Ricerca giocatori */}
-      <input
-        type="text"
-        placeholder="Es: Lautaro Martinez..."
-        value={playerInput}
-        onChange={e => setPlayerInput(e.target.value)}
-        onKeyPress={handleKeyPress}
-      />
+      <div className="search-section">
+        <input
+          type="text"
+          placeholder="Nome giocatore (es: Sommer o Di Lorenzo)"
+          value={playerInput}
+          onChange={(e) => setPlayerInput(e.target.value)}
+          onKeyPress={handleKeyPress}
+        />
+        <button onClick={cercaGiocatoreEsatto}>Cerca</button>
+        {playerData && <button onClick={addPlayer}>➕ Aggiungi</button>}
+      </div>
 
-      {searchResults.length > 0 && (
-        <div className="search-results">
-          {searchResults.map(player => (
-            <div
-              key={player.id}
-              className={`player-card ${!canAddPlayer(player) ? 'disabled' : ''}`}
-              onClick={() => canAddPlayer(player) && setSelectedPlayer(player)}
-            >
-              <h5>{player.name}</h5>
-              <p>{player.team} • {player.role}</p>
-              <p>€{player.price || 0}M</p>
+      {loading && <p>🔄 Caricamento...</p>}
+      {notFound && <p className="notfound">❌ Giocatore non trovato</p>}
+
+      {Object.entries(squadByRole).map(([role, players]) => {
+        const postiLiberi = roleLimits[role] - players.length;
+        return (
+          <div key={role} className="role-section">
+            <h2 data-badge={`${postiLiberi} posti liberi`}>
+              {roleNames[role]} ({players.length}/{roleLimits[role]})
+            </h2>
+            <div className="players-grid">
+              {players.map((p) => (
+                <div key={p.name + Math.random()} className={`player-card ${p.role}`}>
+                  <h3>{p.name}</h3>
+                  <p>Ruolo: {p.role} | Squadra: {p.team}</p>
+                  <ul>
+                    <li>PG: {p.stats.pg}</li>
+                    <li>MV: {p.stats.mv}</li>
+                    <li>MFV: {p.stats.mfv}</li>
+                    <li>GOL: {p.stats.gol}</li>
+                    <li>ASS: {p.stats.ass}</li>
+                    <li>AMM: {p.stats.amm}</li>
+                    <li>ESP: {p.stats.esp}</li>
+                    <li>xG: {p.fbref_data?.xg || 0}</li>
+                    <li>xA: {p.fbref_data?.xg_assist || 0}</li>
+                    <li>Progressivi: {p.fbref_data?.progressive_passes || 0}</li>
+                    {p.role === "GK" && (
+                      <>
+                        <li>Gol subiti: {p.stats.gs}</li>
+                        <li>Rigori parati: {p.stats.rp}</li>
+                        <li>Clean Sheet: {p.fbref_data?.clean_sheets || 0}</li>
+                      </>
+                    )}
+                  </ul>
+                  <p>
+                    <a href={p.url} target="_blank" rel="noreferrer">
+                      🔗 Scheda completa
+                    </a>
+                  </p>
+                  <button className="remove-btn" onClick={() => removePlayer(p)}>❌ Rimuovi</button>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
-
-      {selectedPlayer && (
-        <div className="selected-player">
-          <h4>🎯 Giocatore selezionato</h4>
-          <p>{selectedPlayer.name} • {selectedPlayer.team} • {selectedPlayer.role}</p>
-        </div>
-      )}
-
-      {/* Rosa completa */}
-      {Object.entries(squadByRole).map(([role, players]) => (
-        <div key={role} className="role-section">
-          <h3>{getRoleName(role)} ({players.length}/{roleLimits[role]})</h3>
-          {players.map(player => (
-            <div key={player.id} className="squad-player-card">
-              <div className="player-header">
-                <h4>{player.name}</h4>
-              </div>
-              <p>{player.team} • {player.role}</p>
-              <p>€{player.price || 0}M</p>
-            </div>
-          ))}
-        </div>
-      ))}
+          </div>
+        );
+      })}
     </div>
   );
 };

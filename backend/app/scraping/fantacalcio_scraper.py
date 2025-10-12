@@ -11,9 +11,11 @@ class FantacalcioScraper:
     def __init__(self):
         self.url = "https://www.fantacalcio.it/statistiche-serie-a"
         self.headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                          "AppleWebKit/537.36 (KHTML, like Gecko) "
-                          "Chrome/91.0.4472.124 Safari/537.36"
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/91.0.4472.124 Safari/537.36"
+            )
         }
 
     def _clean_value(self, value):
@@ -47,30 +49,63 @@ class FantacalcioScraper:
         players = []
         for row in rows:
             # Nome e link
-            name_tag = row.select_one("th.player-name a")
+            name_tag = row.select_one("th.player-name a span")
             name = name_tag.get_text(strip=True) if name_tag else ""
-            player_url = name_tag.get("href") if name_tag else None
+            player_url = name_tag.parent.get("href") if name_tag else None
 
             # Squadra
             team_tag = row.select_one("td.player-team")
             team = team_tag.get_text(strip=True) if team_tag else ""
 
-            # Statistiche
+            # Ruolo classic
+            role_tag = row.select_one("th.player-role-classic span.role")
+            role = "MID"  # default
+            if role_tag:
+                val = role_tag.get("data-value", "").lower()
+                if val == "p":
+                    role = "GK"
+                elif val == "d":
+                    role = "DEF"
+                elif val == "c":
+                    role = "MID"
+                elif val == "a":
+                    role = "FWD"
+
+            # Statistiche principali
             stats = {}
             for td in row.find_all("td"):
                 data_key = td.get("data-col-key")
                 if data_key:
                     stats[data_key] = self._clean_value(td.get_text())
 
-            # Ruolo fantacalcio di default MID
-            role = "MID"
+            # FBref-style data (per unione futura)
+            fbref_data = {
+                "player": name,
+                "xg": stats.get("xg", 0),
+                "xg_assist": stats.get("xg_assist", 0),
+                "progressive_passes": stats.get("progressive_passes", 0),
+                "clean_sheets": stats.get("cs", 0),
+                "rigori_parati": stats.get("rp", 0)
+            }
 
             players.append({
                 "name": name,
                 "team": team,
                 "role": role,
                 "url": player_url,
-                "stats": stats
+                "stats": {
+                    "pg": stats.get("pg", 0),
+                    "mv": stats.get("mv", 0),
+                    "mfv": stats.get("mfv", 0),
+                    "gol": stats.get("gol", 0),
+                    "ass": stats.get("ass", 0),
+                    "gs": stats.get("gs", 0),
+                    "rig": stats.get("rig", 0),
+                    "rp": stats.get("rp", 0),
+                    "amm": stats.get("amm", 0),
+                    "esp": stats.get("esp", 0)
+                },
+                "fbref_data": fbref_data
             })
 
         logger.info(f"✅ Estratti {len(players)} giocatori da Fantacalcio.it")

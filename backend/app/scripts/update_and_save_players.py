@@ -6,6 +6,7 @@ from app.scraping.fantacalcio_scraper import FantacalcioScraper
 from app.scraping.fbref_scraper import FBrefScraper
 import unicodedata
 import re
+from rapidfuzz import fuzz
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -45,9 +46,8 @@ class UnifiedPlayerScraper:
         name = unicodedata.normalize('NFKD', name).encode('ASCII','ignore').decode('ASCII')
         name = re.sub(r'\s+', ' ', name.lower().strip())
         name = re.sub(r'\b(jr|sr|ii|iii|iv)\b', '', name)
-        # usa solo cognome
         parts = name.split()
-        return parts[-1] if parts else name
+        return parts[-1] if parts else name  # usa solo cognome
 
     def normalize_team(self, team: str) -> str:
         team_lower = team.lower().strip()
@@ -64,7 +64,7 @@ class UnifiedPlayerScraper:
         elif any(x in fbref_role for x in ["FW", "ST", "CF", "LW", "RW"]): return "FWD"
         return "MID"
 
-    def merge_data(self):
+    def merge_data(self, threshold=80):
         # Scrape Fantacalcio
         logger.info("🔎 Scraping Fantacalcio.it...")
         fanta_players = self.fanta_scraper.scrape_players()
@@ -75,28 +75,44 @@ class UnifiedPlayerScraper:
         fbref_players = self.fbref_scraper.scrape_players()
         fbref_dict = {}
         for p in fbref_players:
-            key = (self.normalize_name(p['name']), self.normalize_team(p['team']))
             p['role'] = self.normalize_role(p.get('role', 'MID'))
-            fbref_dict[key] = p
+            fbref_dict[(self.normalize_team(p['team']), p['name'])] = p
 
-        # Merge dati
+        # Merge dati con fuzzy matching
         merged_players = []
-        for key, fanta in fanta_dict.items():
+        for f_key, fanta in fanta_dict.items():
+            f_name, f_team = f_key
             merged = fanta.copy()
-            if key in fbref_dict:
-                merged['fbref_data'] = fbref_dict[key]['stats']
-                if merged['role'] == 'MID' and fbref_dict[key]['role'] != 'MID':
-                    merged['role'] = fbref_dict[key]['role']
+            best_match = None
+            best_score = 0
+            for fb_key, fb in fbref_dict.items():
+                fb_team, fb_name = fb_key
+                if fb_team != f_team:
+                    continue
+                score = fuzz.ratio(f_name, self.normalize_name(fb_name))
+                if score > best_score:
+                    best_score = score
+                    best_match = fb
+            if best_score >= threshold:
+                merged['fbref_data'] = best_match['stats']
+                if merged['role'] == 'MID' and best_match['role'] != 'MID':
+                    merged['role'] = best_match['role']
             else:
                 merged['fbref_data'] = {}
             merged_players.append(merged)
 
         # Aggiungi giocatori presenti solo su FBref
-        for key, fb in fbref_dict.items():
-            if key not in fanta_dict:
+        for fb_key, fb in fbref_dict.items():
+            fb_team, fb_name = fb_key
+            found = False
+            for mp in merged_players:
+                if self.normalize_name(mp['name']) == self.normalize_name(fb_name) and self.normalize_team(mp['team']) == fb_team:
+                    found = True
+                    break
+            if not found:
                 merged_players.append({
                     'name': fb['name'],
-                    'team': fb['team'],
+                    'team': fb_team,
                     'role': fb['role'],
                     'price': 0.0,
                     'fantacalcio_data': {},
@@ -186,6 +202,7 @@ def insert_data(conn, players):
                 VALUES (?, ?, ?)""", (player_id, stat_name, stat_value))
     conn.commit()
     logger.info(f"✅ Inseriti {len(players)} giocatori nel database")
+
 
 # --- Main ---
 def main():
