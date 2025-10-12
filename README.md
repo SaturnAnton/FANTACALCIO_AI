@@ -43,6 +43,7 @@ This application helps Fantacalcio players make data-driven decisions by:
    cd backend
    python -m venv venv
    source venv/bin/activate
+   python -m app.scripts.update_and_save_players    #create or update json and database with players' stats
    uvicorn main:app --reload
 
    # Terminal 2 (Frontend)
