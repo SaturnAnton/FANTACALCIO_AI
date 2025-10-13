@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Squad from "./pages/Squad";
 import Info from "./pages/Info";
+import Search from "./pages/Search";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
           <Route path="/squad" element={<PrivateRoute><Squad /></PrivateRoute>} />
           <Route path="/info" element={<PrivateRoute><Info /></PrivateRoute>} />
+          <Route path="/search" element={<PrivateRoute><Search /></PrivateRoute>} />
         </Routes>
       </Router>
     </AuthProvider>

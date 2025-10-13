@@ -1,0 +1,102 @@
+/* --- SFONDO E CONTAINER --- */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* card più in alto */
+  padding-top: 80px;
+  background: white; /* sfumatura blu */
+  font-family: 'Arial', sans-serif;
+}
+
+/* CARD */
+.login-card {
+  background-color: #0000FF; /* blu puro */
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  color: #ffffff;
+}
+
+/* TITOLI */
+.login-card h2 {
+  margin-bottom: 25px;
+  color: #ffffff;
+}
+
+/* FORM CENTRATA */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centra input e pulsante */
+  width: 100%;
+}
+
+/* INPUT */
+.auth-form input {
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 15px;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  background-color: #3333FF; /* leggermente più chiaro */
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+.auth-form input::placeholder {
+  color: #c0d3ff;
+}
+
+.auth-form input:focus {
+  outline: none;
+  background-color: #6666FF;
+  box-shadow: 0 0 5px rgba(255,255,255,0.5);
+}
+
+/* PULSANTE */
+.auth-form button {
+  width: 100%;
+  max-width: 300px;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background-color: #0000FF;
+  color: #ffffff;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.auth-form button:hover {
+  background-color: #3333FF;
+  transform: translateY(-2px);
+}
+
+/* MESSAGGIO ERRORE */
+.error {
+  color: red;
+  margin-bottom: 10px;
+}
+
+/* LINK REGISTRAZIONE */
+.login-card p {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #c0d3ff;
+}
+
+.login-card p a {
+  color: #99bbff;
+  text-decoration: none;
+}
+
+.login-card p a:hover {
+  text-decoration: underline;
+}

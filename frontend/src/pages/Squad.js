@@ -29,7 +29,6 @@ const Squad = () => {
       const trovato = data.players.find((p) => {
         const playerName = normalize(p.name || "");
         const fbrefName = normalize(p.fbref_data?.player || "");
-        // ⚡ Confronto preciso: deve essere uguale
         return playerName === nome || fbrefName === nome;
       });
 
@@ -94,6 +93,8 @@ const Squad = () => {
 
       {Object.entries(squadByRole).map(([role, players]) => {
         const postiLiberi = roleLimits[role] - players.length;
+        if (players.length === 0) return null;
+
         return (
           <div key={role} className="role-section">
             <h2 data-badge={`${postiLiberi} posti liberi`}>
@@ -128,7 +129,7 @@ const Squad = () => {
                       🔗 Scheda completa
                     </a>
                   </p>
-                  <button className="remove-btn" onClick={() => removePlayer(p)}>❌ Rimuovi</button>
+                  <button className="remove-btn" onClick={() => removePlayer(p)}>❌</button>
                 </div>
               ))}
             </div>

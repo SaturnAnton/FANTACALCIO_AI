@@ -1,0 +1,45 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  background-color: #0000FF;
+  padding: 10px 20px;
+  color: white;
+}
+
+/* Sinistra e destra */
+.navbar-left,
+.navbar-right {
+  flex: 1; /* occupano lo spazio ai lati */
+}
+
+/* Centro */
+.navbar-center {
+  display: flex;
+  justify-content: center; /* centra i link orizzontalmente */
+  gap: 20px; /* spazio tra i link */
+}
+
+/* Link al centro */
+.navbar-center a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.navbar-center a:hover {
+  text-decoration: underline;
+}
+
+/* Pulsante logout */
+.navbar-right button {
+  background-color: #e74c3c;
+  border: none;
+  padding: 5px 10px;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.navbar-right button:hover {
+  background-color: #c0392b;
+}

@@ -1,3 +1,4 @@
+/* --- CONTAINER PRINCIPALE --- */
 .squad-container {
   max-width: 1000px;
   margin: auto;
@@ -5,6 +6,7 @@
   font-family: Arial, sans-serif;
 }
 
+/* --- SEZIONE RICERCA --- */
 .search-section {
   display: flex;
   gap: 10px;
@@ -40,38 +42,28 @@
   margin-top: 10px;
 }
 
+/* --- SEZIONI PER RUOLO --- */
 .role-section {
   margin-bottom: 30px;
 }
 
 .role-section h2 {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   font-size: 20px;
+  margin-bottom: 10px;
 }
 
-.role-section h2::after {
-  content: attr(data-badge);
-  background: #333;
-  color: #fff;
-  font-size: 14px;
-  padding: 2px 6px;
-  border-radius: 12px;
-  margin-left: 10px;
-}
-
+/* --- CARD GIOCATORI VERTICALI --- */
 .players-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
+  display: block; /* flusso verticale */
 }
 
 .player-card {
+  width: 100%;
+  max-width: 1000px;
+  margin-bottom: 15px;
   padding: 12px;
   border-radius: 10px;
   color: white;
-  width: 220px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   transition: transform 0.2s, box-shadow 0.2s;
   position: relative;
@@ -82,32 +74,42 @@
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
+/* COLORI PER RUOLO */
 .player-card.GK { background-color: #FFD700; color: black; }
 .player-card.DEF { background-color: #228B22; }
 .player-card.MID { background-color: #1E90FF; }
 .player-card.FWD { background-color: #FF4500; }
 
-.player-card h3 {
-  margin: 0 0 5px 0;
-}
-
+/* --- STATISTICHE --- */
 .player-card ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
   list-style: none;
   padding-left: 0;
   margin: 5px 0;
 }
 
 .player-card ul li {
-  font-size: 14px;
-  margin-bottom: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 13px;
 }
 
+.player-card.GK ul li { background: rgba(0, 0, 0, 0.15); color: black; }
+.player-card.DEF ul li { background: rgba(255, 255, 255, 0.15); }
+.player-card.MID ul li { background: rgba(255, 255, 255, 0.25); }
+.player-card.FWD ul li { background: rgba(0, 0, 0, 0.2); }
+
+/* LINK CARD */
 .player-card a {
   color: #fff;
   text-decoration: underline;
   font-size: 14px;
 }
 
+/* PULSANTE RIMUOVI */
 .remove-btn {
   position: absolute;
   top: 8px;
@@ -126,8 +128,9 @@
   background: #cc0000;
 }
 
+/* --- RESPONSIVE --- */
 @media (max-width: 768px) {
-  .players-grid {
-    justify-content: center;
+  .player-card {
+    max-width: 100%;
   }
 }
