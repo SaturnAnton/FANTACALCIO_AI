@@ -1,19 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Squad.css";
 
 const roleLimits = { GK: 3, DEF: 8, MID: 8, FWD: 6 };
 const roleNames = { GK: "Portieri", DEF: "Difensori", MID: "Centrocampisti", FWD: "Attaccanti" };
 
-const Squad = () => {
+const Squad = ({ currentUser }) => {
   const [playerInput, setPlayerInput] = useState("");
   const [playerData, setPlayerData] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [squad, setSquad] = useState([]);
+
+  // 🔹 Squadra dell’utente corrente
+  const [squad, setSquad] = useState(() => {
+    const saved = localStorage.getItem(`squadra_${currentUser}`);
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // 🔹 Aggiorna localStorage quando cambia la squadra o l’utente
+  useEffect(() => {
+    localStorage.setItem(`squadra_${currentUser}`, JSON.stringify(squad));
+  }, [squad, currentUser]);
+
+  // 🔹 Aggiorna la squadra quando cambia utente
+  useEffect(() => {
+    const saved = localStorage.getItem(`squadra_${currentUser}`);
+    setSquad(saved ? JSON.parse(saved) : []);
+  }, [currentUser]);
 
   const normalize = (str) => str.toLowerCase().replace(/\s+/g, " ").trim();
 
-  // 🔹 Cerca giocatore nel JSON con nome preciso
   const cercaGiocatoreEsatto = async () => {
     const nome = normalize(playerInput.trim());
     if (!nome) return;
@@ -136,6 +151,21 @@ const Squad = () => {
           </div>
         );
       })}
+
+      {/* Pulsante reset alla fine della pagina */}
+      <div className="reset-section">
+        <button
+          className="reset-btn"
+          onClick={() => {
+            if (window.confirm("Vuoi davvero resettare la tua squadra?")) {
+              setSquad([]);
+              localStorage.removeItem(`squadra_${currentUser}`);
+            }
+          }}
+        >
+          🔄 Resetta squadra
+        </button>
+      </div>
     </div>
   );
 };

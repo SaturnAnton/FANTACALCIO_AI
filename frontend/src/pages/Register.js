@@ -59,8 +59,8 @@ const Register = () => {
   return (
     <div className="register-container">
       <div className="register-card">
-        <h2>Registrazione</h2>
-        <form onSubmit={handleSubmit}>
+        <h2>Welcome to FANTACALCIO AI</h2>
+        <form className="auth-form" onSubmit={handleSubmit}>
           <input
             type="email"
             placeholder="Email"
@@ -83,7 +83,7 @@ const Register = () => {
           </button>
         </form>
         <p>
-          Hai già un account? <Link to="/login">Torna al login</Link>
+          Already have an account? <Link to="/login">Return to login</Link>
         </p>
       </div>
     </div>

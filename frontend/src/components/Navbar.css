@@ -26,6 +26,12 @@
   font-weight: bold;
 }
 
+.navbar-right {
+  display: flex;
+  justify-content: flex-end; /* Spinge tutto a destra */
+  align-items: center; /* (Opzionale) Allinea verticalmente */
+}
+
 .navbar-center a:hover {
   text-decoration: underline;
 }

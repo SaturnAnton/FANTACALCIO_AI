@@ -36,8 +36,8 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h2>Login</h2>
-        <form onSubmit={handleSubmit}>
+        <h2>Welcome back</h2>
+        <form className="auth-form" onSubmit={handleSubmit}>
           <input
             type="email"
             placeholder="Email"
@@ -56,7 +56,7 @@ const Login = () => {
           <button type="submit">Login</button>
         </form>
         <p>
-          Non hai un account? <Link to="/register">Registrati qui</Link>
+          Don't have an account? <Link to="/register">Register here</Link>
         </p>
       </div>
     </div>

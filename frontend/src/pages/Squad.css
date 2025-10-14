@@ -134,3 +134,29 @@
     max-width: 100%;
   }
 }
+
+/* Sezione reset */
+.reset-section {
+  display: flex;
+  justify-content: center; /* centra orizzontalmente */
+  margin: 30px 0;          /* spazio sopra e sotto */
+}
+
+/* Pulsante reset */
+.reset-btn {
+  background-color: #ffffff; /* bianco */
+  color: #000000;            /* testo nero */
+  border: 2px solid #000000; /* bordo nero */
+  padding: 10px 25px;        /* altezza e larghezza */
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 12px;       /* angoli arrotondati */
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reset-btn:hover {
+  background-color: #000000; /* sfondo nero al passaggio del mouse */
+  color: #ffffff;            /* testo diventa bianco */
+  transform: scale(1.05);    /* leggero ingrandimento */
+}

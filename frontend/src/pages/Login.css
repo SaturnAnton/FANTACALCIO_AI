@@ -3,15 +3,15 @@
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* card più in alto */
+  align-items: flex-start;
   padding-top: 80px;
-  background: white; /* sfumatura blu */
+  background: white;
   font-family: 'Arial', sans-serif;
 }
 
 /* CARD */
 .login-card {
-  background-color: #0000FF; /* blu puro */
+  background-color: #0000FF;
   padding: 40px 30px;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.3);
@@ -19,6 +19,9 @@
   max-width: 400px;
   text-align: center;
   color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centra tutto il contenuto */
 }
 
 /* TITOLI */
@@ -28,15 +31,15 @@
 }
 
 /* FORM CENTRATA */
-.auth-form {
+.login-card form {
   display: flex;
   flex-direction: column;
-  align-items: center; /* centra input e pulsante */
+  align-items: center;
   width: 100%;
 }
 
-/* INPUT */
-.auth-form input {
+/* INPUT BIANCHI */
+.login-card form input {
   width: 100%;
   max-width: 300px;
   margin-bottom: 15px;
@@ -44,23 +47,24 @@
   font-size: 16px;
   border-radius: 8px;
   border: none;
-  background-color: #3333FF; /* leggermente più chiaro */
-  color: #ffffff;
+  background-color: #ffffff; /* BIANCO */
+  color: #000000; /* TESTO NERO */
   box-sizing: border-box;
 }
 
-.auth-form input::placeholder {
-  color: #c0d3ff;
+.login-card form input::placeholder {
+  color: #666666; /* PLACEHOLDER GRIGIO SCURO */
 }
 
-.auth-form input:focus {
+.login-card form input:focus {
   outline: none;
-  background-color: #6666FF;
-  box-shadow: 0 0 5px rgba(255,255,255,0.5);
+  background-color: #ffffff;
+  box-shadow: 0 0 5px rgba(255,255,255,0.8);
+  border: 2px solid #e0e0e0;
 }
 
-/* PULSANTE */
-.auth-form button {
+/* PULSANTE BIANCO */
+.login-card form button {
   width: 100%;
   max-width: 300px;
   padding: 12px;
@@ -69,19 +73,19 @@
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  background-color: #0000FF;
-  color: #ffffff;
+  background-color: #ffffff; /* BIANCO */
+  color: #000000; /* TESTO NERO */
   transition: background 0.3s, transform 0.2s;
 }
 
-.auth-form button:hover {
-  background-color: #3333FF;
+.login-card form button:hover {
+  background-color: #f0f0f0; /* BIANCO LEggermente più scuro al hover */
   transform: translateY(-2px);
 }
 
 /* MESSAGGIO ERRORE */
 .error {
-  color: red;
+  color: #ffcccc;
   margin-bottom: 10px;
 }
 
@@ -93,8 +97,9 @@
 }
 
 .login-card p a {
-  color: #99bbff;
+  color: #ffffff;
   text-decoration: none;
+  font-weight: bold;
 }
 
 .login-card p a:hover {
