@@ -44,21 +44,21 @@ const Search = () => {
 
   return (
     <div className="squad-container">
-      <h1>🔍 Cerca un Giocatore</h1>
+      <h1>🔍 Search for a Player</h1>
 
       <div className="search-section">
         <input
           type="text"
-          placeholder="Inserisci nome giocatore (es: Leao, Lautaro)"
+          placeholder="Enter player name (e.g., Leao, Lautaro)"
           value={playerInput}
           onChange={(e) => setPlayerInput(e.target.value)}
           onKeyPress={handleKeyPress}
         />
-        <button onClick={cercaGiocatoreEsatto}>Cerca</button>
+        <button onClick={cercaGiocatoreEsatto}>🔍 Search</button>
       </div>
 
-      {loading && <p>🔄 Caricamento dati...</p>}
-      {notFound && <p className="notfound">❌ Nessun giocatore trovato</p>}
+      {loading && <p>🔄 Loading player data...</p>}
+      {notFound && <p className="notfound">❌ Player not found</p>}
 
       {playerData && (
         <div className="players-grid">
@@ -90,7 +90,7 @@ const Search = () => {
 
             <p>
               <a href={playerData.url} target="_blank" rel="noreferrer">
-                🔗 Scheda completa
+                🔗 Complete Player Profile
               </a>
             </p>
           </div>

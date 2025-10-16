@@ -71,7 +71,7 @@ const Register = () => {
           />
           <input
             type="password"
-            placeholder="Password (minimo 8 caratteri)"
+            placeholder="Password (min 8 chars)"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             disabled={isLoading}
@@ -79,7 +79,7 @@ const Register = () => {
           />
           {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
           <button type="submit" disabled={isLoading}>
-            {isLoading ? "Registrazione in corso..." : "Registrati"}
+            {isLoading ? "Registering..." : "Register"}
           </button>
         </form>
         <p>

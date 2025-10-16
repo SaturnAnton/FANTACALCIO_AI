@@ -89,22 +89,22 @@ const Squad = ({ currentUser }) => {
 
   return (
     <div className="squad-container">
-      <h1>📊 Squadra Fantacalcio</h1>
+      <h1>📊Fantacalcio Squad</h1>
 
       <div className="search-section">
         <input
           type="text"
-          placeholder="Nome giocatore (es: Sommer o Di Lorenzo)"
+          placeholder="Search for players (e.g., Sommer or Di Lorenzo)"
           value={playerInput}
           onChange={(e) => setPlayerInput(e.target.value)}
           onKeyPress={handleKeyPress}
         />
-        <button onClick={cercaGiocatoreEsatto}>Cerca</button>
-        {playerData && <button onClick={addPlayer}>➕ Aggiungi</button>}
+        <button onClick={cercaGiocatoreEsatto}>🔍 Search</button>
+        {playerData && <button onClick={addPlayer}>➕ Add Player</button>}
       </div>
 
-      {loading && <p>🔄 Caricamento...</p>}
-      {notFound && <p className="notfound">❌ Giocatore non trovato</p>}
+      {loading && <p>🔄 Loading...</p>}
+      {notFound && <p className="notfound">❌ Player not found</p>}
 
       {Object.entries(squadByRole).map(([role, players]) => {
         const postiLiberi = roleLimits[role] - players.length;
@@ -141,7 +141,7 @@ const Squad = ({ currentUser }) => {
                   </ul>
                   <p>
                     <a href={p.url} target="_blank" rel="noreferrer">
-                      🔗 Scheda completa
+                      🔗 Complete Player Profile
                     </a>
                   </p>
                   <button className="remove-btn" onClick={() => removePlayer(p)}>❌</button>
@@ -163,7 +163,7 @@ const Squad = ({ currentUser }) => {
             }
           }}
         >
-          🔄 Resetta squadra
+          🔄 Reset Team
         </button>
       </div>
     </div>

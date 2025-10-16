@@ -2,10 +2,10 @@ import React from "react";
 
 const Info = () => (
   <div className="page-container">
-    <h1>Informazioni sul progetto</h1>
+    <h1>About Fantacalcio AI</h1>
     <p>
-      Fantacalcio AI è un'applicazione per gestire la tua squadra di Serie A e
-      prevedere le performance dei giocatori usando dati reali e predizioni AI.
+      Fantacalcio AI is an application to manage your Serie A team and predict
+      player performances using real data and AI predictions.
     </p>
   </div>
 );
