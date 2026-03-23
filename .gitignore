@@ -1,0 +1,55 @@
+# --- PYTHON / FLASK ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.python-version
+
+# --- NODE / REACT / VITE ---
+node_modules/
+dist/
+dist-ssr/
+*.local
+.eslintcache
+.stylelintcache
+.vite/
+.parcel-cache
+
+# --- AMBIENTE E SEGRETI (MOLTO IMPORTANTE) ---
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+instance/
+.webassets-cache
+
+# --- EDITOR E SISTEMA ---
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
